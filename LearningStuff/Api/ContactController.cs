@@ -29,6 +29,9 @@ namespace LearningStuff.Api
                 Trace.TraceWarning("Post failed. Contact missing"); 
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "A contact must be supplied");
             }
+
+            contact.Name = $"{contact.Name} ({100/contact.Id})";
+
             _repository.SaveContact(contact);
 
             return Request.CreateResponse(HttpStatusCode.Created, contact);
