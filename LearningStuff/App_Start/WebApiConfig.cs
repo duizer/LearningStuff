@@ -1,4 +1,6 @@
 ﻿using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
+using Microsoft.ApplicationInsights;
 
 namespace LearningStuff
 {
@@ -16,6 +18,21 @@ namespace LearningStuff
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Services.Add(typeof(IExceptionLogger), new TelemetryExceptionLogger());
+        }
+
+        public class TelemetryExceptionLogger : ExceptionLogger
+        {
+            public override void Log(ExceptionLoggerContext context)
+            {
+                if (context != null && context.Exception != null)
+                { 
+                    var tc = new TelemetryClient();
+                    tc.TrackException(context.Exception);
+                }
+                base.Log(context);
+            }
         }
     }
 }
