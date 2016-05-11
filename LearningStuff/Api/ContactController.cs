@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -24,8 +25,10 @@ namespace LearningStuff.Api
         public HttpResponseMessage Post(Contact contact)
         {
             if (contact == null)
+            {
+                Trace.TraceWarning("Post failed. Contact missing"); 
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "A contact must be supplied");
-
+            }
             _repository.SaveContact(contact);
 
             return Request.CreateResponse(HttpStatusCode.Created, contact);
